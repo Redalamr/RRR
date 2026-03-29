@@ -11,6 +11,7 @@ class LinUCB():
         self.alpha = alpha
         self.d = d
 
+        # matrices A et vecteurs b pour chaque bras (modele lineaire par bras)
         self.A = {}
         self.b = {}
         for arm in self.ground_arms["arm_id"]:
@@ -42,6 +43,7 @@ class LinUCB():
 
         i = 0
         for arm in self.arms_pool['arm_id']:
+            # score linucb = prediction lineaire + bonus de confiance contextuel
             A_inv = np.linalg.inv(self.A[arm])
             theta_hat = A_inv @ self.b[arm]
             ucb_values[i] = theta_hat @ user_context + self.alpha * np.sqrt(user_context @ A_inv @ user_context)
@@ -62,7 +64,7 @@ class LinUCB():
         return reward
 
     def update(self, observation):
-
+        # maj des matrices A et b avec le contexte et le reward binarise
         feedback = observation["feedback"][observation["arm_id"] == self.arm_chosen].iloc[0]
         reward_binaire = 1 if feedback >= self.threshold else 0
         x = self.last_context

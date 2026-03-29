@@ -11,6 +11,7 @@ class LinTS():
         self.d = d
         self.v = v
 
+        # B = matrice de precision, f = vecteur de reward cumule, mu_hat = estimation courante
         self.B = {arm: np.identity(self.d) for arm in self.ground_arms["arm_id"]}
         self.f = {arm: np.zeros(self.d) for arm in self.ground_arms["arm_id"]}
         self.mu_hat = {arm: np.zeros(self.d) for arm in self.ground_arms["arm_id"]}
@@ -37,6 +38,7 @@ class LinTS():
 
         i = 0
         for arm in self.arms_pool["arm_id"]:
+            # on tire un theta depuis une gaussienne multivariee centree sur mu_hat
             B_inv = np.linalg.inv(self.B[arm])
             mu_tilde = np.random.multivariate_normal(self.mu_hat[arm], self.v ** 2 * B_inv)
             scores[i] = user_context @ mu_tilde
@@ -54,7 +56,7 @@ class LinTS():
         return reward
 
     def update(self, observation):
-
+        # maj bayesienne : on update B, f et on recalcule mu_hat
         feedback = observation["feedback"][observation["arm_id"] == self.arm_chosen].iloc[0]
         reward_binaire = 1 if feedback >= self.threshold else 0
         x = self.last_context

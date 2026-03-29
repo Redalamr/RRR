@@ -9,6 +9,7 @@ class TS():
         self.arms_pool = self.ground_arms.copy()
         self.name = "TS"
 
+        # parametres de la loi beta pour chaque bras (succes / echecs)
         self.successes = np.zeros(len(self.ground_arms))
         self.failures = np.zeros(len(self.ground_arms))
 
@@ -36,6 +37,7 @@ class TS():
         i = 0
         for arm in self.arms_pool['arm_id']:
             arm_pos = self.ground_arms.index[self.ground_arms["arm_id"] == arm]
+            # on tire un echantillon de la loi beta(succes+1, echecs+1)
             alpha = self.successes[arm_pos] + 1
             beta = self.failures[arm_pos] + 1
             theta_samples[i] = np.random.beta(alpha, beta)
@@ -56,7 +58,7 @@ class TS():
         return reward
 
     def update(self, observation):
-
+        # binarisation du feedback puis maj des compteurs beta
         feedback = observation["feedback"][observation["arm_id"] == self.arm_chosen].iloc[0]
         reward_binaire = 1 if feedback >= self.threshold else 0
         if reward_binaire == 1:

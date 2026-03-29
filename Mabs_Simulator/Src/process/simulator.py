@@ -1,25 +1,18 @@
-'''
-Created on 23 mars 2024
-
-@author: aletard
-'''
-
 import time
 import numpy as np
 import pandas as pd
 import random as rd
-
 from Src.utils.repository_manager import RepositoryManager as RM
 from Src.data_management.data_loader import DataLoader as DL
 from Src.Reporting.report_generator import ReportGenerator
 from Src.Reporting.results_storer import ResultStorer
-
 from Src.algorithms.EGreedy import EGreedy
 from Src.algorithms.Random import Random
 from Src.algorithms.UCB1 import UCB1
 from Src.algorithms.TS import TS
 from Src.algorithms.LinUCB import LinUCB
 from Src.algorithms.LinTS import LinTS
+from Src.algorithms.VolatileUCB import VolatileUCB
 
 
 class Simulator():
@@ -31,12 +24,15 @@ class Simulator():
         "TS": TS,
         "LinUCB": LinUCB,
         "LinTS": LinTS,
+        "VolatileUCB": VolatileUCB,
     }
 
-    def __init__(self, algorithm_name="EGreedy", d=None, dataset_name="02-Mushrooms"):
+    def __init__(self, algorithm_name="EGreedy", d=None,
+                 dataset_name="02-Mushrooms", mode="Volatile"):
         print("Initializing Simulator")
 
         self.dataset_name = dataset_name
+        self.mode = mode
         self.datas = self.data_extraction()
 
         if algorithm_name not in self.ALGORITHM_MAP:
@@ -46,7 +42,9 @@ class Simulator():
 
         if algorithm_name in ("LinUCB", "LinTS"):
             if d is None:
-                raise ValueError(f"Le paramètre d est obligatoire pour {algorithm_name}")
+                raise ValueError(
+                    f"Le paramètre d est obligatoire pour {algorithm_name}"
+                )
             self.algorithm = algorithm_class(self.datas["arms"], d=d)
         else:
             self.algorithm = algorithm_class(self.datas["arms"])
@@ -55,14 +53,16 @@ class Simulator():
         self.results = ResultStorer(self.horizon)
         self.reporter = ReportGenerator(
             RM.create_repository_with_timestamp("../Output"),
-            (self.dataset_name, self.horizon, self.algorithm.name)
+            (self.dataset_name, self.horizon, self.algorithm.name, self.mode)
         )
 
         self.life_sign_delay = (300, 5000)
+        # generateur aleatoire pour le masque de dispo des bras
         self._arm_rng = np.random.default_rng(seed=42)
         self._base_probs = None
         self._cycle_periods = None
-        self.use_volatile_mask = True  # False = baseline statique
+        # en mode volatile on active le masque sinusoidal sur les bras
+        self.use_volatile_mask = (mode == "Volatile")
 
     def run_simulation(self):
         print("starting simulation")
@@ -70,25 +70,34 @@ class Simulator():
         self.results.start_time = time.time()
         for iteration in range(self.horizon):
 
+            # on recupere le contexte et les feedbacks pour un user aleatoire
             user_id = rd.choice(self.datas["contexts"]["context_id"])
             user_context = self.context_formatter(
-                self.datas["contexts"][self.datas["contexts"]['context_id'] == user_id]
+                self.datas["contexts"][
+                    self.datas["contexts"]["context_id"] == user_id
+                ]
             )
             observed_value = self.datas["results"][
                 self.datas["results"]["context_id"] == user_id
             ].copy()
 
+            # si volatile, on genere le masque et on filtre les bras actifs
             if self.use_volatile_mask:
-                mask = self.generate_availability_mask(self.datas["arms"]["arm_id"], iteration)
-                active_arm_ids = self.datas["arms"]["arm_id"][mask == 1].values
+                mask = self.generate_availability_mask(
+                    self.datas["arms"]["arm_id"], iteration
+                )
+                active_arm_ids = self.datas["arms"]["arm_id"][
+                    mask == 1
+                ].values
                 observed_value = observed_value[
                     observed_value["arm_id"].isin(active_arm_ids)
                 ].copy()
 
+            # on enleve le context_id du vecteur de features avant de le passer a l algo
             user_context = user_context[1:]
-            self.results.algorithm_performance["predicted_arms"][iteration] = self.algorithm.run(
-                observed_value, user_context
-            )
+            self.results.algorithm_performance["predicted_arms"][
+                iteration
+            ] = self.algorithm.run(observed_value, user_context)
             self.algorithm.update(observed_value)
             self.results.update_measures(iteration, observed_value)
 
@@ -109,16 +118,22 @@ class Simulator():
         if algorithm_name in ("LinUCB", "LinTS"):
             d_param = self.algorithm.d
 
+        # matrice pour stocker les courbes de regret de chaque run
         all_regret_curves = np.zeros((nb_runs, self.horizon))
 
         for run_index in range(nb_runs):
             print(f"\n=== Run {run_index + 1} / {nb_runs} ===")
 
             if d_param is not None:
-                self.algorithm = self.ALGORITHM_MAP[algorithm_name](self.datas["arms"], d=d_param)
+                self.algorithm = self.ALGORITHM_MAP[algorithm_name](
+                    self.datas["arms"], d=d_param
+                )
             else:
-                self.algorithm = self.ALGORITHM_MAP[algorithm_name](self.datas["arms"])
+                self.algorithm = self.ALGORITHM_MAP[algorithm_name](
+                    self.datas["arms"]
+                )
 
+            # on reinit l algo et les resultats a chaque run pour avoir des runs independants
             self.results = ResultStorer(self.horizon)
             self._arm_rng = np.random.default_rng(seed=42 + run_index)
             self._base_probs = None
@@ -126,15 +141,25 @@ class Simulator():
 
             self.run_simulation()
 
-            all_regret_curves[run_index] = self.results.algorithm_performance["cumulated_regrets"]
+            all_regret_curves[run_index] = (
+                self.results.algorithm_performance["cumulated_regrets"]
+            )
 
         mean_regret = np.mean(all_regret_curves, axis=0)
         std_regret = np.std(all_regret_curves, axis=0)
 
         print(f"\nRésultats sur {nb_runs} runs")
-        print(f"Regrets cumulés par run : {all_regret_curves[:, -1]}")
-        print(f"Moyenne du regret cumulé final : {round(float(mean_regret[-1]), 3)}")
-        print(f"Écart-type du regret cumulé final : {round(float(std_regret[-1]), 3)}")
+        print(
+            f"Regrets cumulés par run : {all_regret_curves[:, -1]}"
+        )
+        print(
+            f"Moyenne du regret cumulé final : "
+            f"{round(float(mean_regret[-1]), 3)}"
+        )
+        print(
+            f"Écart-type du regret cumulé final : "
+            f"{round(float(std_regret[-1]), 3)}"
+        )
 
         statistics = {
             "mean_cumulated_regrets": mean_regret,
@@ -163,7 +188,7 @@ class Simulator():
     def context_formatter(self, context):
         try:
             context = context.drop(["context_id"], axis=1)
-        except:
+        except Exception:
             print("Error ")
 
         nb_dimensions = context.shape[1]
@@ -173,18 +198,24 @@ class Simulator():
         return user_context
 
     def generate_availability_mask(self, arms, iteration):
+        # masque de disponibilite sinusoidal pour simuler la volatilite des bras
         n_arms = len(arms)
 
+        # on initialise les probas de base et les periodes de cycle une seule fois
         if self._base_probs is None or len(self._base_probs) != n_arms:
             rng = np.random.default_rng(seed=123)
             self._base_probs = rng.uniform(0.5, 0.95, size=n_arms)
             self._cycle_periods = rng.integers(50, 500, size=n_arms)
 
+        # modulation sinusoidale de la proba de presence de chaque bras
         phase = 2 * np.pi * iteration / self._cycle_periods
-        effective_probs = np.clip(self._base_probs + 0.2 * np.sin(phase), 0.05, 1.0)
+        effective_probs = np.clip(
+            self._base_probs + 0.2 * np.sin(phase), 0.05, 1.0
+        )
 
         mask = (self._arm_rng.random(n_arms) < effective_probs).astype(int)
 
+        # on garantit qu au moins un bras est toujours dispo
         if mask.sum() == 0:
             mask[self._arm_rng.integers(n_arms)] = 1
 
@@ -192,19 +223,25 @@ class Simulator():
 
     def sign_life(self, iteration):
         sign_life_message = (
-            f"\nLe simulateur tourne depuis {round(time.time() - self.results.start_time, 3)} secondes.\n"
+            f"\nLe simulateur tourne depuis "
+            f"{round(time.time() - self.results.start_time, 3)} secondes.\n"
             f"Itération en cours : {iteration}, "
-            f"précision : {round(self.results.algorithm_performance['accuracy'][iteration], 3)}, "
-            f"regret cumulé : {round(self.results.algorithm_performance['cumulated_regrets'][iteration], 3)}.\n\n"
+            f"précision : "
+            f"{round(self.results.algorithm_performance['accuracy'][iteration], 3)}, "
+            f"regret cumulé : "
+            f"{round(self.results.algorithm_performance['cumulated_regrets'][iteration], 3)}.\n\n"
         )
         self.reporter.log_generator(sign_life_message)
 
     def end_sign(self):
         end_message = (
             f"\nSimulation terminée\n"
-            f"Durée totale : {round(self.results.end_time - self.results.start_time, 3)} secondes.\n"
+            f"Durée totale : "
+            f"{round(self.results.end_time - self.results.start_time, 3)} secondes.\n"
             f"Nombre d'itérations : {self.horizon}, "
-            f"précision finale : {round(self.results.algorithm_performance['accuracy'][self.horizon - 1], 3)}, "
-            f"regret cumulé final : {round(self.results.algorithm_performance['cumulated_regrets'][self.horizon - 1], 3)}.\n\n"
+            f"précision finale : "
+            f"{round(self.results.algorithm_performance['accuracy'][self.horizon - 1], 3)}, "
+            f"regret cumulé final : "
+            f"{round(self.results.algorithm_performance['cumulated_regrets'][self.horizon - 1], 3)}.\n\n"
         )
         self.reporter.log_generator(end_message)

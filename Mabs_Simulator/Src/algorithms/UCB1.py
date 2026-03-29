@@ -27,6 +27,7 @@ class UCB1():
     def init_choice(self, observation):
 
         self.arm_chosen = -1
+        # on filtre pour garder que les bras actifs (ceux presents dans observation)
         self.arms_pool = self.ground_arms[self.ground_arms["arm_id"].isin(observation["arm_id"])]
         self.arms_pool.reset_index(inplace=True)
 
@@ -53,6 +54,7 @@ class UCB1():
                 arm_pos = self.ground_arms.index[self.ground_arms["arm_id"] == arm]
                 avg_reward = self.arms_payoff_vectors["cumulated_rewards"][arm_pos] / \
                                 self.arms_payoff_vectors["tries"][arm_pos]
+                # formule ucb1 classique : exploration = sqrt(2 * ln(N) / n_i)
                 exploration_bonus = np.sqrt(2 * np.log(total_tries) / self.arms_payoff_vectors["tries"][arm_pos])
                 ucb_values[i] = avg_reward + exploration_bonus
                 i += 1
@@ -72,7 +74,7 @@ class UCB1():
         return reward
 
     def update(self, observation):
-
+        # on binarise le feedback movielens : 1 si note >= 4, 0 sinon
         feedback = observation["feedback"][observation["arm_id"] == self.arm_chosen].iloc[0]
         reward_binaire = 1 if feedback >= self.threshold else 0
         self.arms_payoff_vectors["cumulated_rewards"][self.arm_chosen] += reward_binaire

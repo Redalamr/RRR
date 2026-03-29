@@ -28,6 +28,7 @@ class EGreedy():
     def init_choice(self, observation):
 
         self.arm_chosen = -1
+        # on garde que les bras disponibles dans l observation
         self.arms_pool = self.ground_arms[self.ground_arms["arm_id"].isin(observation["arm_id"])]
         self.arms_pool.reset_index(inplace=True)
 
@@ -47,6 +48,7 @@ class EGreedy():
 
         if arm_chosen_index == -1 :
 
+            # exploration aleatoire avec proba epsilon
             n = random.uniform(0., 1.)
             if n < self.epsilon:
                     arm_chosen_index = random.choice(self.arms_pool.index)
@@ -77,7 +79,7 @@ class EGreedy():
         return reward
 
     def update(self, observation):
-
+        # on passe par evaluate qui binarise le feedback (>= 4 => 1)
         observed_reward = self.evaluate(observation)
         self.arms_payoff_vectors["cumulated_rewards"][self.arm_chosen] += observed_reward
         self.arms_payoff_vectors["tries"][self.arm_chosen] += 1
