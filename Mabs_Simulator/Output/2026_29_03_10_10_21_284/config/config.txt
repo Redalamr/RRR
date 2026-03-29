@@ -1,0 +1,2 @@
+Simulation configuration: 
+Dataset: 06-MovieLens, 30000 iterations, algorithm: Random

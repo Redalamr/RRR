@@ -1,0 +1,360 @@
+
+Le simulateur tourne depuis 0.012 secondes.
+Itération en cours : 0, précision : 0.0, regret cumulé : 1.0.
+
+
+
+Le simulateur tourne depuis 68.083 secondes.
+Itération en cours : 5000, précision : 0.644, regret cumulé : 1779.0.
+
+
+
+Le simulateur tourne depuis 134.113 secondes.
+Itération en cours : 10000, précision : 0.668, regret cumulé : 3316.0.
+
+
+
+Le simulateur tourne depuis 202.052 secondes.
+Itération en cours : 15000, précision : 0.695, regret cumulé : 4569.0.
+
+
+
+Le simulateur tourne depuis 272.263 secondes.
+Itération en cours : 20000, précision : 0.72, regret cumulé : 5609.0.
+
+
+
+Le simulateur tourne depuis 334.87 secondes.
+Itération en cours : 25000, précision : 0.74, regret cumulé : 6506.0.
+
+
+
+Simulation terminée
+Durée totale : 399.887 secondes.
+Nombre d'itérations : 30000, précision finale : 0.751, regret cumulé final : 7463.0.
+
+
+
+Le simulateur tourne depuis 0.023 secondes.
+Itération en cours : 0, précision : 1.0, regret cumulé : 0.0.
+
+
+
+Le simulateur tourne depuis 62.577 secondes.
+Itération en cours : 5000, précision : 0.642, regret cumulé : 1790.0.
+
+
+
+Le simulateur tourne depuis 128.375 secondes.
+Itération en cours : 10000, précision : 0.681, regret cumulé : 3186.0.
+
+
+
+Le simulateur tourne depuis 192.123 secondes.
+Itération en cours : 15000, précision : 0.705, regret cumulé : 4421.0.
+
+
+
+Le simulateur tourne depuis 255.474 secondes.
+Itération en cours : 20000, précision : 0.727, regret cumulé : 5457.0.
+
+
+
+Le simulateur tourne depuis 320.233 secondes.
+Itération en cours : 25000, précision : 0.743, regret cumulé : 6422.0.
+
+
+
+Simulation terminée
+Durée totale : 385.923 secondes.
+Nombre d'itérations : 30000, précision finale : 0.758, regret cumulé final : 7273.0.
+
+
+
+Le simulateur tourne depuis 0.031 secondes.
+Itération en cours : 0, précision : 1.0, regret cumulé : 0.0.
+
+
+
+Le simulateur tourne depuis 71.553 secondes.
+Itération en cours : 5000, précision : 0.639, regret cumulé : 1806.0.
+
+
+
+Le simulateur tourne depuis 139.028 secondes.
+Itération en cours : 10000, précision : 0.678, regret cumulé : 3224.0.
+
+
+
+Le simulateur tourne depuis 209.396 secondes.
+Itération en cours : 15000, précision : 0.705, regret cumulé : 4419.0.
+
+
+
+Le simulateur tourne depuis 279.236 secondes.
+Itération en cours : 20000, précision : 0.73, regret cumulé : 5405.0.
+
+
+
+Le simulateur tourne depuis 348.055 secondes.
+Itération en cours : 25000, précision : 0.748, regret cumulé : 6308.0.
+
+
+
+Simulation terminée
+Durée totale : 416.1 secondes.
+Nombre d'itérations : 30000, précision finale : 0.763, regret cumulé final : 7110.0.
+
+
+
+Le simulateur tourne depuis 0.031 secondes.
+Itération en cours : 0, précision : 1.0, regret cumulé : 0.0.
+
+
+
+Le simulateur tourne depuis 67.838 secondes.
+Itération en cours : 5000, précision : 0.665, regret cumulé : 1677.0.
+
+
+
+Le simulateur tourne depuis 131.147 secondes.
+Itération en cours : 10000, précision : 0.687, regret cumulé : 3134.0.
+
+
+
+Le simulateur tourne depuis 195.462 secondes.
+Itération en cours : 15000, précision : 0.712, regret cumulé : 4319.0.
+
+
+
+Le simulateur tourne depuis 263.32 secondes.
+Itération en cours : 20000, précision : 0.73, regret cumulé : 5391.0.
+
+
+
+Le simulateur tourne depuis 327.47 secondes.
+Itération en cours : 25000, précision : 0.747, regret cumulé : 6328.0.
+
+
+
+Simulation terminée
+Durée totale : 391.318 secondes.
+Nombre d'itérations : 30000, précision finale : 0.762, regret cumulé final : 7129.0.
+
+
+
+Le simulateur tourne depuis 0.039 secondes.
+Itération en cours : 0, précision : 0.0, regret cumulé : 1.0.
+
+
+
+Le simulateur tourne depuis 67.195 secondes.
+Itération en cours : 5000, précision : 0.636, regret cumulé : 1819.0.
+
+
+
+Le simulateur tourne depuis 136.477 secondes.
+Itération en cours : 10000, précision : 0.677, regret cumulé : 3233.0.
+
+
+
+Le simulateur tourne depuis 205.32 secondes.
+Itération en cours : 15000, précision : 0.708, regret cumulé : 4380.0.
+
+
+
+Le simulateur tourne depuis 275.292 secondes.
+Itération en cours : 20000, précision : 0.728, regret cumulé : 5431.0.
+
+
+
+Le simulateur tourne depuis 342.15 secondes.
+Itération en cours : 25000, précision : 0.745, regret cumulé : 6363.0.
+
+
+
+Simulation terminée
+Durée totale : 404.689 secondes.
+Nombre d'itérations : 30000, précision finale : 0.761, regret cumulé final : 7170.0.
+
+
+
+Le simulateur tourne depuis 0.017 secondes.
+Itération en cours : 0, précision : 1.0, regret cumulé : 0.0.
+
+
+
+Le simulateur tourne depuis 64.184 secondes.
+Itération en cours : 5000, précision : 0.665, regret cumulé : 1675.0.
+
+
+
+Le simulateur tourne depuis 129.494 secondes.
+Itération en cours : 10000, précision : 0.693, regret cumulé : 3074.0.
+
+
+
+Le simulateur tourne depuis 193.493 secondes.
+Itération en cours : 15000, précision : 0.715, regret cumulé : 4279.0.
+
+
+
+Le simulateur tourne depuis 259.415 secondes.
+Itération en cours : 20000, précision : 0.733, regret cumulé : 5349.0.
+
+
+
+Le simulateur tourne depuis 324.577 secondes.
+Itération en cours : 25000, précision : 0.75, regret cumulé : 6252.0.
+
+
+
+Simulation terminée
+Durée totale : 390.077 secondes.
+Nombre d'itérations : 30000, précision finale : 0.764, regret cumulé final : 7095.0.
+
+
+
+Le simulateur tourne depuis 0.011 secondes.
+Itération en cours : 0, précision : 0.0, regret cumulé : 1.0.
+
+
+
+Le simulateur tourne depuis 63.424 secondes.
+Itération en cours : 5000, précision : 0.641, regret cumulé : 1794.0.
+
+
+
+Le simulateur tourne depuis 128.179 secondes.
+Itération en cours : 10000, précision : 0.676, regret cumulé : 3241.0.
+
+
+
+Le simulateur tourne depuis 193.929 secondes.
+Itération en cours : 15000, précision : 0.708, regret cumulé : 4381.0.
+
+
+
+Le simulateur tourne depuis 256.424 secondes.
+Itération en cours : 20000, précision : 0.727, regret cumulé : 5455.0.
+
+
+
+Le simulateur tourne depuis 321.204 secondes.
+Itération en cours : 25000, précision : 0.744, regret cumulé : 6405.0.
+
+
+
+Simulation terminée
+Durée totale : 384.908 secondes.
+Nombre d'itérations : 30000, précision finale : 0.759, regret cumulé final : 7221.0.
+
+
+
+Le simulateur tourne depuis 0.005 secondes.
+Itération en cours : 0, précision : 1.0, regret cumulé : 0.0.
+
+
+
+Le simulateur tourne depuis 63.021 secondes.
+Itération en cours : 5000, précision : 0.653, regret cumulé : 1736.0.
+
+
+
+Le simulateur tourne depuis 127.294 secondes.
+Itération en cours : 10000, précision : 0.68, regret cumulé : 3204.0.
+
+
+
+Le simulateur tourne depuis 193.397 secondes.
+Itération en cours : 15000, précision : 0.707, regret cumulé : 4393.0.
+
+
+
+Le simulateur tourne depuis 256.53 secondes.
+Itération en cours : 20000, précision : 0.729, regret cumulé : 5419.0.
+
+
+
+Le simulateur tourne depuis 318.719 secondes.
+Itération en cours : 25000, précision : 0.747, regret cumulé : 6317.0.
+
+
+
+Simulation terminée
+Durée totale : 383.007 secondes.
+Nombre d'itérations : 30000, précision finale : 0.763, regret cumulé final : 7102.0.
+
+
+
+Le simulateur tourne depuis 0.014 secondes.
+Itération en cours : 0, précision : 1.0, regret cumulé : 0.0.
+
+
+
+Le simulateur tourne depuis 63.2 secondes.
+Itération en cours : 5000, précision : 0.644, regret cumulé : 1779.0.
+
+
+
+Le simulateur tourne depuis 128.291 secondes.
+Itération en cours : 10000, précision : 0.68, regret cumulé : 3198.0.
+
+
+
+Le simulateur tourne depuis 194.09 secondes.
+Itération en cours : 15000, précision : 0.712, regret cumulé : 4327.0.
+
+
+
+Le simulateur tourne depuis 257.394 secondes.
+Itération en cours : 20000, précision : 0.735, regret cumulé : 5292.0.
+
+
+
+Le simulateur tourne depuis 322.419 secondes.
+Itération en cours : 25000, précision : 0.755, regret cumulé : 6133.0.
+
+
+
+Simulation terminée
+Durée totale : 389.001 secondes.
+Nombre d'itérations : 30000, précision finale : 0.77, regret cumulé final : 6910.0.
+
+
+
+Le simulateur tourne depuis 0.0 secondes.
+Itération en cours : 0, précision : 1.0, regret cumulé : 0.0.
+
+
+
+Le simulateur tourne depuis 66.024 secondes.
+Itération en cours : 5000, précision : 0.645, regret cumulé : 1777.0.
+
+
+
+Le simulateur tourne depuis 131.807 secondes.
+Itération en cours : 10000, précision : 0.685, regret cumulé : 3151.0.
+
+
+
+Le simulateur tourne depuis 195.203 secondes.
+Itération en cours : 15000, précision : 0.706, regret cumulé : 4416.0.
+
+
+
+Le simulateur tourne depuis 260.196 secondes.
+Itération en cours : 20000, précision : 0.727, regret cumulé : 5455.0.
+
+
+
+Le simulateur tourne depuis 327.749 secondes.
+Itération en cours : 25000, précision : 0.747, regret cumulé : 6323.0.
+
+
+
+Simulation terminée
+Durée totale : 391.371 secondes.
+Nombre d'itérations : 30000, précision finale : 0.761, regret cumulé final : 7161.0.
+
+

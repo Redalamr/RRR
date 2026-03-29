@@ -62,6 +62,7 @@ class Simulator():
         self._arm_rng = np.random.default_rng(seed=42)
         self._base_probs = None
         self._cycle_periods = None
+        self.use_volatile_mask = True  # False = baseline statique
 
     def run_simulation(self):
         print("starting simulation")
@@ -77,17 +78,21 @@ class Simulator():
                 self.datas["results"]["context_id"] == user_id
             ].copy()
 
-            mask = self.generate_availability_mask(self.datas["arms"]["arm_id"], iteration)
-            active_arm_ids = self.datas["arms"]["arm_id"][mask == 1].values
-            observed_value = observed_value[observed_value["arm_id"].isin(active_arm_ids)].copy()
+            if self.use_volatile_mask:
+                mask = self.generate_availability_mask(self.datas["arms"]["arm_id"], iteration)
+                active_arm_ids = self.datas["arms"]["arm_id"][mask == 1].values
+                observed_value = observed_value[
+                    observed_value["arm_id"].isin(active_arm_ids)
+                ].copy()
 
             user_context = user_context[1:]
-            self.results.algorithm_performance["predicted_arms"][iteration] = self.algorithm.run(observed_value, user_context)
+            self.results.algorithm_performance["predicted_arms"][iteration] = self.algorithm.run(
+                observed_value, user_context
+            )
             self.algorithm.update(observed_value)
             self.results.update_measures(iteration, observed_value)
 
-            if (time.time() - self.results.start_time == self.life_sign_delay[0]) | \
-                    (iteration % self.life_sign_delay[1] == 0):
+            if iteration % self.life_sign_delay[1] == 0:
                 self.sign_life(iteration)
 
         self.results.end_time = time.time()
@@ -126,7 +131,7 @@ class Simulator():
         mean_regret = np.mean(all_regret_curves, axis=0)
         std_regret = np.std(all_regret_curves, axis=0)
 
-        print(f"\n=== Résultats sur {nb_runs} runs ===")
+        print(f"\nRésultats sur {nb_runs} runs")
         print(f"Regrets cumulés par run : {all_regret_curves[:, -1]}")
         print(f"Moyenne du regret cumulé final : {round(float(mean_regret[-1]), 3)}")
         print(f"Écart-type du regret cumulé final : {round(float(std_regret[-1]), 3)}")
@@ -145,7 +150,9 @@ class Simulator():
         }
 
     def data_extraction(self):
-        rss_path = RM.get_absolute_from_relative_path(f"../Resources/bandit_datasets/{self.dataset_name}")
+        rss_path = RM.get_absolute_from_relative_path(
+            f"../Resources/bandit_datasets/{self.dataset_name}"
+        )
         files_to_load = RM.get_files_in_directory(rss_path)
         files_path = []
         for file in files_to_load:
@@ -157,7 +164,7 @@ class Simulator():
         try:
             context = context.drop(["context_id"], axis=1)
         except:
-            print("Error on context formatting")
+            print("Error ")
 
         nb_dimensions = context.shape[1]
         context = np.array(context)
@@ -185,19 +192,19 @@ class Simulator():
 
     def sign_life(self, iteration):
         sign_life_message = (
-            f"\nSimulator has been running for {round(time.time() - self.results.start_time, 3)} seconds. \n"
-            f"Currently going for iteration {iteration}, "
-            f"latest accuracy value : {round(self.results.algorithm_performance['accuracy'][iteration], 3)}, "
-            f"cumulated regrets: {round(self.results.algorithm_performance['cumulated_regrets'][iteration], 3)}.\n\n"
+            f"\nLe simulateur tourne depuis {round(time.time() - self.results.start_time, 3)} secondes.\n"
+            f"Itération en cours : {iteration}, "
+            f"précision : {round(self.results.algorithm_performance['accuracy'][iteration], 3)}, "
+            f"regret cumulé : {round(self.results.algorithm_performance['cumulated_regrets'][iteration], 3)}.\n\n"
         )
         self.reporter.log_generator(sign_life_message)
 
     def end_sign(self):
         end_message = (
-            f"\nSimulation correctly ended. \n"
-            f"The simulation has been running for {round(self.results.end_time - self.results.start_time, 3)} seconds. \n"
-            f"The simulation included {self.horizon} iterations, "
-            f"latest accuracy value : {round(self.results.algorithm_performance['accuracy'][self.horizon - 1], 3)}, "
-            f"cumulated regrets: {round(self.results.algorithm_performance['cumulated_regrets'][self.horizon - 1], 3)}.\n\n"
+            f"\nSimulation terminée\n"
+            f"Durée totale : {round(self.results.end_time - self.results.start_time, 3)} secondes.\n"
+            f"Nombre d'itérations : {self.horizon}, "
+            f"précision finale : {round(self.results.algorithm_performance['accuracy'][self.horizon - 1], 3)}, "
+            f"regret cumulé final : {round(self.results.algorithm_performance['cumulated_regrets'][self.horizon - 1], 3)}.\n\n"
         )
         self.reporter.log_generator(end_message)
